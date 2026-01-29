@@ -26,11 +26,11 @@ def main():
         color="black",
         rasterized=True,
     )
-
-    plt.show()
-
     stop = timeit.default_timer()
     print("Time: ", stop - start)
+    
+    plt.show()
+    
 
 
 if __name__ == "__main__":
