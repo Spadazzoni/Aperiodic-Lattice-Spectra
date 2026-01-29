@@ -1,4 +1,5 @@
 import numpy as np
+from scipy.linalg import eigh_tridiagonal
 
 
 def NewFibonacci(Seed, NumberOfSubstitutions):
@@ -48,9 +49,20 @@ def Potential(Seed, NumberOfSubstitutions, TimeSteps):
 def Hamiltonian(Size, Mass, Seed, NumberOfSubstitutions, TimeSteps, TimeIndex):
     Potential = Potential(Seed, NumberOfSubstitutions, TimeSteps)
     Diagonal = np.zeros(Size)
-    OffDiagonal = Mass * np.ones(Size-1)
+    OffDiagonal = Mass * np.ones(Size - 1)
     for i in range(Size):
         Diagonal[i] = Potential[TimeIndex + i * TimeSteps]
     return Diagonal, OffDiagonal
 
 
+def FullSpectrum(Size, Mass, Seed, NumberOfSubstitutions, TimeSteps, TotalTranslations):
+    TotalSteps = TimeSteps * TotalTranslations
+    FullSpectrum = np.zeros((TotalSteps, Size))
+    for i in range(TotalTranslations):
+        for j in range(TimeSteps):
+            TimeIndex = i * TimeSteps + j
+            Diagonal, OffDiagonal = Hamiltonian(
+                Size, Mass, Seed, NumberOfSubstitutions, TimeSteps, TimeIndex
+            )
+            FullSpectrum[TimeIndex, :] = eigh_tridiagonal(Diagonal, OffDiagonal, True)
+    return FullSpectrum
