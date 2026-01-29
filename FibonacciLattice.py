@@ -31,27 +31,28 @@ def NewFibonacci(Seed, NumberOfSubstitutions):
 def Potential(Seed, NumberOfSubstitutions, TimeSteps):
     Lattice = NewFibonacci(Seed, NumberOfSubstitutions)
     Lenght = len(Lattice)
-    Potential = []
+    Pot = []
     FullPotential = []
-    for i in range(1, Lenght):
+    for i in range(0, Lenght):
         if Lattice[i] == 0:
-            Potential.append(-1)
+            Pot.append(-1)
         if Lattice[i] == 1:
-            Potential.append(1)
-        for TimeTick in range(TimeSteps):
-            FullPotential.append(
-                Potential[i] * (1 - TimeTick / TimeSteps)
-                + Potential[i - 1] * TimeTick / TimeSteps
-            )
+            Pot.append(1)
+        if i > 0:
+            for TimeTick in range(TimeSteps):
+                FullPotential.append(
+                    Pot[i] * (1 - TimeTick / TimeSteps)
+                    + Pot[i - 1] * TimeTick / TimeSteps
+                )
     return FullPotential
 
 
 def Hamiltonian(Size, Mass, Seed, NumberOfSubstitutions, TimeSteps, TimeIndex):
-    Potential = Potential(Seed, NumberOfSubstitutions, TimeSteps)
+    Pot = Potential(Seed, NumberOfSubstitutions, TimeSteps)
     Diagonal = np.zeros(Size)
     OffDiagonal = Mass * np.ones(Size - 1)
     for i in range(Size):
-        Diagonal[i] = Potential[TimeIndex + i * TimeSteps]
+        Diagonal[i] = Pot[TimeIndex + i * TimeSteps]
     return Diagonal, OffDiagonal
 
 
