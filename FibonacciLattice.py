@@ -1,3 +1,6 @@
+import numpy as np
+
+
 def NewFibonacci(Seed, NumberOfSubstitutions):
     Lattice = []
     NewList = []
@@ -40,4 +43,14 @@ def Potential(Seed, NumberOfSubstitutions, TimeSteps):
                 + Potential[i - 1] * TimeTick / TimeSteps
             )
     return FullPotential
+
+
+def Hamiltonian(Size, Mass, Seed, NumberOfSubstitutions, TimeSteps, TimeIndex):
+    Potential = Potential(Seed, NumberOfSubstitutions, TimeSteps)
+    Diagonal = np.zeros(Size)
+    OffDiagonal = Mass * np.ones(Size-1)
+    for i in range(Size):
+        Diagonal[i] = Potential[TimeIndex + i * TimeSteps]
+    return Diagonal, OffDiagonal
+
 
