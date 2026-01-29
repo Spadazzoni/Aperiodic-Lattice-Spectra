@@ -1,9 +1,11 @@
 import FibonacciLattice as fl
 import numpy as np
 import matplotlib.pyplot as plt
+import timeit
 
 
 def main():
+    start = timeit.default_timer()
     N = 10
     Seed = "0,0"
     Size = 70
@@ -12,7 +14,7 @@ def main():
     TimeSteps = 100
 
     FullSpectrum = fl.FullSpectrum(Size, Mass, Seed, N, TimeSteps, Translations)
-    Map = np.outer(range(Translations * TimeSteps), np.ones(Size)/TimeSteps)
+    Map = np.outer(range(Translations * TimeSteps), np.ones(Size) / TimeSteps)
     fig, ax = plt.subplots(figsize=(25, 25))
 
     ax.scatter(
@@ -26,6 +28,9 @@ def main():
     )
 
     plt.show()
+
+    stop = timeit.default_timer()
+    print("Time: ", stop - start)
 
 
 if __name__ == "__main__":
