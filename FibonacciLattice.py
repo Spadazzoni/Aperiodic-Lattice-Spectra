@@ -22,3 +22,22 @@ def NewFibonacci(Seed, NumberOfSubstitutions):
         RightLattice = NewFibonacci(Seed.split(",")[1], NumberOfSubstitutions)
         Lattice = ShortenedLeftLattice + RightLattice
     return Lattice
+
+
+def Potential(Seed, NumberOfSubstitutions, TimeSteps):
+    Lattice = NewFibonacci(Seed, NumberOfSubstitutions)
+    Lenght = len(Lattice)
+    Potential = []
+    FullPotential = []
+    for i in range(1, Lenght):
+        if Lattice[i] == 0:
+            Potential.append(-1)
+        if Lattice[i] == 1:
+            Potential.append(1)
+        for TimeTick in range(TimeSteps):
+            FullPotential.append(
+                Potential[i] * (1 - TimeTick / TimeSteps)
+                + Potential[i - 1] * TimeTick / TimeSteps
+            )
+    return FullPotential
+
