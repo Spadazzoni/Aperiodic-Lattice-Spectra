@@ -22,7 +22,7 @@ def NewFibonacci(Seed, NumberOfSubstitutions):
                 NewList = []
     elif len(Seed.split(",")) == 2:
         LeftLattice = NewFibonacci(Seed.split(",")[0], NumberOfSubstitutions)
-        ShortenedLeftLattice = LeftLattice[int(0.9 * len(LeftLattice)) :]
+        ShortenedLeftLattice = LeftLattice[int(0.95 * len(LeftLattice)) :]
         RightLattice = NewFibonacci(Seed.split(",")[1], NumberOfSubstitutions)
         Lattice = ShortenedLeftLattice + RightLattice
     return Lattice
@@ -55,6 +55,84 @@ def Hamiltonian(Size, Mass, Seed, NumberOfSubstitutions, TimeSteps, TimeIndex):
         Diagonal[i] = Pot[TimeIndex + i * TimeSteps]
     return Diagonal, OffDiagonal
 
+
+def DivideFullSpectrum(
+    Iteration,
+    FullSpectrum,
+    LeftSpectrum,
+    RightSpectrum,
+    EigenVectors,
+    LeftIndex,
+    RightIndex,
+    TimeIndex,
+    Size,
+    TimeSteps,
+    BoundaryLenght,
+    DecisionFactor,
+):
+    for i in range(Size):
+        iThEigenVector = EigenVectors[:, i]
+        LeftIntegral = np.sum(
+            np.abs(iThEigenVector[0 : int(Size * BoundaryLenght)]) ** 4
+        )
+        RightIntegral = np.sum(
+            np.abs(iThEigenVector[Size - int(Size * BoundaryLenght) : Size]) ** 4
+        )
+        CenterIntegral = (
+            np.sum(np.abs(iThEigenVector) ** 4) - LeftIntegral - RightIntegral
+        )
+        if LeftIntegral > DecisionFactor * (CenterIntegral + RightIntegral):
+            LeftSpectrum.append(FullSpectrum[TimeIndex, i])
+            LeftIndex.append(Iteration / TimeSteps)
+            FullSpectrum[TimeIndex, i] = np.nan
+        elif RightIntegral > DecisionFactor * (CenterIntegral + LeftIntegral):
+            RightSpectrum.append(FullSpectrum[TimeIndex, i])
+            RightIndex.append(Iteration / TimeSteps)
+            FullSpectrum[TimeIndex, i] = np.nan
+    return FullSpectrum, LeftSpectrum, LeftIndex, RightSpectrum, RightIndex
+
+
+def FibonacciSpectrum(
+    TotalTimeTranslations,
+    TimeSteps,
+    Size,
+    Seed,
+    NumberOfSubstitutions,
+    BoundaryLenght,
+    DecisionFactor,
+    Mass,
+):
+    LeftSpectrum = []
+    LeftIndex = []
+    RightSpectrum = []
+    RightIndex = []
+    FullSpectrum = np.zeros((TimeSteps * TotalTimeTranslations, Size))
+    for Translation in range(TotalTimeTranslations):
+        for TimeTick in range(TimeSteps):
+            TimeIndex = Translation * TimeSteps + TimeTick
+            Diagonal, OffDiagonal = Hamiltonian(
+                Size, Mass, Seed, NumberOfSubstitutions, TimeSteps, TimeIndex
+            )
+            FullSpectrum[TimeIndex, :], EigenVectors = eigh_tridiagonal(
+                Diagonal, OffDiagonal
+            )
+            FullSpectrum, LeftSpectrum, LeftIndex, RightSpectrum, RightIndex = (
+                DivideFullSpectrum(
+                    TimeIndex,
+                    FullSpectrum,
+                    LeftSpectrum,
+                    RightSpectrum,
+                    EigenVectors,
+                    LeftIndex,
+                    RightIndex,
+                    TimeIndex,
+                    Size,
+                    TimeSteps,
+                    BoundaryLenght,
+                    DecisionFactor,
+                )
+            )
+    return FullSpectrum, LeftSpectrum, LeftIndex, RightSpectrum, RightIndex
 
 def FullSpectrum(Size, Mass, Seed, NumberOfSubstitutions, TimeSteps, TotalTranslations):
     TotalSteps = TimeSteps * TotalTranslations
