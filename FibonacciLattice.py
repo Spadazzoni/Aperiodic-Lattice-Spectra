@@ -41,8 +41,8 @@ def Potential(Seed, NumberOfSubstitutions, TimeSteps):
         if i > 0:
             for TimeTick in range(TimeSteps):
                 FullPotential.append(
-                    Pot[i] * (1 - TimeTick / TimeSteps)
-                    + Pot[i - 1] * TimeTick / TimeSteps
+                    Pot[i - 1] * (1 - TimeTick / TimeSteps)
+                    + Pot[i] * TimeTick / TimeSteps
                 )
     return FullPotential
 
@@ -59,9 +59,9 @@ def Hamiltonian(Size, Mass, Seed, NumberOfSubstitutions, TimeSteps, TimeIndex):
 def FullSpectrum(Size, Mass, Seed, NumberOfSubstitutions, TimeSteps, TotalTranslations):
     TotalSteps = TimeSteps * TotalTranslations
     FullSpectrum = np.zeros((TotalSteps, Size))
-    for i in range(TotalTranslations):
-        for j in range(TimeSteps):
-            TimeIndex = i * TimeSteps + j
+    for Translation in range(TotalTranslations):
+        for TimeTick in range(TimeSteps):
+            TimeIndex = Translation * TimeSteps + TimeTick
             Diagonal, OffDiagonal = Hamiltonian(
                 Size, Mass, Seed, NumberOfSubstitutions, TimeSteps, TimeIndex
             )
