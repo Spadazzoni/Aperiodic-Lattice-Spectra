@@ -1,4 +1,4 @@
-import PeriodDoublingLattice as fl
+import FibonacciLattice as fl
 import matplotlib.pyplot as plt
 import numpy as np
 import timeit
@@ -6,7 +6,7 @@ import timeit
 
 def main():
     start = timeit.default_timer()
-    NumberOfSubstitutions = 10  # 10
+    NumberOfSubstitutions = 12  # F: 12, PD: 8
     TotalTimeTranslations = 50  # 50
     Size = 70  # 70
     TimeSteps = 100  # 100
@@ -15,9 +15,9 @@ def main():
     TotalNumberOfSteps = TimeSteps * TotalTimeTranslations
     MassFactor = 1  # 1
     SeedPlus = "0,0"
-    SeedMinus = "0,1"
+    SeedMinus = "0,1" # F: 0,1 ; PD: 1,0
 
-    FullSpectrumPlus, LeftSpectrumPlus, LeftIndexPlus, RightSpectrumPlus, RightIndex = (
+    FullSpectrumPlus, LeftSpectrumPlus, LeftIndexPlus, RightSpectrumPlus, RightIndexPlus = (
         fl.FibonacciSpectrum(
             TotalTimeTranslations,
             TimeSteps,
@@ -85,6 +85,28 @@ def main():
         s=1,
         linewidths=0.5,
         color="red",
+        alpha=0.5,
+        rasterized=True,
+    )
+
+    # numerical effects
+    ax.scatter(
+        RightIndexPlus,
+        RightSpectrumPlus,
+        marker=".",
+        s=1,
+        linewidths=0.25,
+        color="lavender",
+        alpha=0.25,
+        rasterized=True,
+    )
+    ax.scatter(
+        RightIndexMinus,
+        RightSpectrumMinus,
+        marker=".",
+        s=1,
+        linewidths=0.25,
+        color="lavender",
         alpha=0.5,
         rasterized=True,
     )
