@@ -134,6 +134,7 @@ def FibonacciSpectrum(
             )
     return FullSpectrum, LeftSpectrum, LeftIndex, RightSpectrum, RightIndex
 
+
 def FullSpectrum(Size, Mass, Seed, NumberOfSubstitutions, TimeSteps, TotalTranslations):
     TotalSteps = TimeSteps * TotalTranslations
     FullSpectrum = np.zeros((TotalSteps, Size))
