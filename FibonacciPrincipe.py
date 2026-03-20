@@ -1,4 +1,4 @@
-import FibonacciLattice as fl
+import PeriodDoublingLattice as fl
 import matplotlib.pyplot as plt
 import numpy as np
 import timeit
@@ -6,28 +6,32 @@ import timeit
 
 def main():
     start = timeit.default_timer()
-    NumberOfSubstitutions = 12  # F: 12, PD: 8
+    NumberOfSubstitutions = 8  # F: 12, PD: 8
     TotalTimeTranslations = 50  # 50
     Size = 70  # 70
-    TimeSteps = 100  # 100
+    TimeSteps = 100  # 100 # 300
     BoundaryLenght = 0.2  # 0.2
     DecisionFactor = 8  # 8
     TotalNumberOfSteps = TimeSteps * TotalTimeTranslations
     MassFactor = 1  # 1
     SeedPlus = "0,0"
-    SeedMinus = "0,1" # F: 0,1 ; PD: 1,0
+    SeedMinus = "1,0"  # F: 0,1 ; PD: 1,0
 
-    FullSpectrumPlus, LeftSpectrumPlus, LeftIndexPlus, RightSpectrumPlus, RightIndexPlus = (
-        fl.FibonacciSpectrum(
-            TotalTimeTranslations,
-            TimeSteps,
-            Size,
-            SeedPlus,
-            NumberOfSubstitutions,
-            BoundaryLenght,
-            DecisionFactor,
-            MassFactor,
-        )
+    (
+        FullSpectrumPlus,
+        LeftSpectrumPlus,
+        LeftIndexPlus,
+        RightSpectrumPlus,
+        RightIndexPlus,
+    ) = fl.FibonacciSpectrum(
+        TotalTimeTranslations,
+        TimeSteps,
+        Size,
+        SeedPlus,
+        NumberOfSubstitutions,
+        BoundaryLenght,
+        DecisionFactor,
+        MassFactor,
     )
     (
         FullSpectrumMinus,
@@ -69,6 +73,18 @@ def main():
         color="black",
         rasterized=True,
     )
+
+    ax.scatter(
+        TimeAxis,
+        FullSpectrumMinus,
+        marker=".",
+        s=1,
+        linewidths=0.5,
+        color="blue",
+        rasterized=True,
+    )
+
+    ax.scatter
     ax.scatter(
         LeftIndexPlus,
         LeftSpectrumPlus,
@@ -96,7 +112,7 @@ def main():
         marker=".",
         s=1,
         linewidths=0.25,
-        color="lavender",
+        color="silver",
         alpha=0.25,
         rasterized=True,
     )
@@ -106,7 +122,7 @@ def main():
         marker=".",
         s=1,
         linewidths=0.25,
-        color="lavender",
+        color="silver",
         alpha=0.5,
         rasterized=True,
     )
