@@ -9,7 +9,7 @@ def main():
     NumberOfSubstitutions = 8  # F: 12, PD: 8
     TotalTimeTranslations = 50  # 50
     Size = 70  # 70
-    TimeSteps = 100  # 100 # 300
+    TimeSteps = 300  # 100 # 300
     BoundaryLenght = 0.2  # 0.2
     DecisionFactor = 8  # 8
     TotalNumberOfSteps = TimeSteps * TotalTimeTranslations
